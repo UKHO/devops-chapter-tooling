@@ -1,5 +1,10 @@
-Connect-AzAccount -tenantId "9134ca48-663d-4a05-968a-31a42f0aed3e"
-Set-AzContext -Subscription "0eaeb992-8461-4308-ab7c-81d9f9b29356"
+param(
+    [guid]$TenantId, 
+    [guid]$SubscriptionId
+)
+
+Connect-AzAccount -tenantId $TenantId
+Set-AzContext -Subscription $SubscriptionId
 
 $repositoryDirectory = $(git rev-parse --show-toplevel)
 $terraformDirectory = "$repositoryDirectory/sandbox/terraform"
