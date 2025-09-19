@@ -11,4 +11,8 @@ module "avm-res-storage-storageaccount" {
       name = "tfstate"
     }
   }
+
+  enable_telemetry = false
+
+  shared_access_key_enabled = true
 }
