@@ -15,4 +15,6 @@ module "avm-res-storage-storageaccount" {
   enable_telemetry = false
 
   shared_access_key_enabled = true
+
+  tags = local.tags
 }
