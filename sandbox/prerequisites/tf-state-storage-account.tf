@@ -16,5 +16,5 @@ module "avm-res-storage-storageaccount" {
 
   shared_access_key_enabled = true
 
-  tags = local.tags
+  tags = data.azurerm_resource_group.m_devopschapter_rg.tags
 }
