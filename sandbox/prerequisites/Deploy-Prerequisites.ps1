@@ -7,7 +7,7 @@ Connect-AzAccount -tenantId $TenantId
 Set-AzContext -Subscription $SubscriptionId
 
 $repositoryDirectory = $( git rev-parse --show-toplevel )
-$terraformDirectory = "$repositoryDirectory/sandbox/terraform"
+$terraformDirectory = "$repositoryDirectory/sandbox/prerequisites"
 $discoveryVariable = "$terraformDirectory/config/discovery.tfvars"
 
 Write-Host $terraformDirectory
