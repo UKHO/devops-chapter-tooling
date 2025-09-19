@@ -16,4 +16,4 @@ Write-Host $discoveryVariable
 Set-Location $terraformDirectory
 terraform init
 terraform plan -var-file="$discoveryVariable" -out=tfplan
-terraform apply -var-file="$discoveryVariable" -auto-approve
+terraform apply tfplan -auto-approve
