@@ -2,9 +2,9 @@ name: Linting Poc
 
 on:
     push:
-        branches: [lint-stuff]
+        branches: [lint-poc]
     pull_request:
-        branches: [lint-stuff]
+        branches: [lint-poc]
 
 jobs:
     megalinter:
