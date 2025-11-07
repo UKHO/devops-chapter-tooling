@@ -1,0 +1,23 @@
+name: Linting Poc
+
+on:
+    push:
+        branches: [lint-stuff]
+    pull_request:
+        branches: [lint-stuff]
+
+jobs:
+    megalinter:
+        name: linting checks
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v5
+
+            - name: Run Mega-Linter
+              uses: oxsecurity/megalinter/flavors/terraform@v9.1.0
+              env:
+                VALIDATE_ALL_CODEBASE: true
+                APPLY_FIXES: none
+                ENABLE: MARKDOWN,YAML,TERRAFORM
+                ENABLE_LINTERS: MARKDOWN_MARKDOWNLINT,YAML_YAMLLINT,TERRAFORM_TFLINT
