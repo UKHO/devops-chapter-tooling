@@ -18,6 +18,9 @@ jobs:
               uses: oxsecurity/megalinter/flavors/terraform@v9.1.0
               env:
                 VALIDATE_ALL_CODEBASE: true
-                APPLY_FIXES: none
+                APPLY_FIXES: MARKDOWN_MARKDOWNLINTER,YAML_YAMLLINT,TERRAFORM_TFLINT
+                APPLY_FIXES_EVENT: all
+                APPLY_FIXES_MODE: pull_request
+                APPLY_FIXES_IF_COMMIT: 'true'
                 ENABLE: MARKDOWN,YAML,TERRAFORM
-                ENABLE_LINTERS: MARKDOWN_MARKDOWNLINT,YAML_YAMLLINT,TERRAFORM_TFLINT
+                DISABLE_LINTERS: MARKDOWN_MARKDOWN_TABLE_FORMATTER,YAML_PRETTIER,YAML_V8R,TERRAFORM_FMT,TERRAFORM_TERRASCAN
