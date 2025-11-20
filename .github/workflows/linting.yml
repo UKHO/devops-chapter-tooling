@@ -20,7 +20,7 @@ jobs:
 
             - name: Run Mega-Linter
               id: ml
-              uses: oxsecurity/megalinter/flavors/terraform@v9.1.0
+              uses: UKHO/megalinter-custom-flavor-ukho@v0.0.1-alpha
               env:
                 VALIDATE_ALL_CODEBASE: true
                 APPLY_FIXES: YAML_YAMLLINT
