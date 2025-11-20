@@ -4,6 +4,15 @@ rules:
     present: false
   comments:
     min-spaces-from-content: 1
-  new-lines:
+  line-length:
+    max: 140
     level: warning
-    type: unix
+  indentation:
+    spaces: consistent
+    indent-sequences: true
+    check-multi-line-strings: false
+    level: warning
+  truthy:
+    allowed-values: ['true', 'false']
+    check-keys: true
+    level: warning
