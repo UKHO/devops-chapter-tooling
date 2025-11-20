@@ -11,7 +11,7 @@ rules:
     spaces: consistent
     indent-sequences: true
     check-multi-line-strings: false
-    level: warning
+    level: error
   truthy:
     allowed-values: ['true', 'false']
     check-keys: true

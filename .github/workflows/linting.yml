@@ -10,17 +10,35 @@ jobs:
     megalinter:
         name: linting checks
         runs-on: ubuntu-latest
+        permissions:
+          contents: write
+          issues: write
+          pull-requests: write
         steps:
             - name: Checkout Code
               uses: actions/checkout@v5
 
             - name: Run Mega-Linter
+              id: ml
               uses: oxsecurity/megalinter/flavors/terraform@v9.1.0
               env:
                 VALIDATE_ALL_CODEBASE: true
                 APPLY_FIXES: MARKDOWN_MARKDOWNLINT,YAML_YAMLLINT,TERRAFORM_TFLINT
-                APPLY_FIXES_EVENT: all
+                APPLY_FIXES_EVENT: pull_request
                 APPLY_FIXES_MODE: pull_request
                 APPLY_FIXES_IF_COMMIT: 'true'
                 ENABLE: MARKDOWN,YAML,TERRAFORM
                 DISABLE_LINTERS: MARKDOWN_MARKDOWN_TABLE_FORMATTER,YAML_PRETTIER,YAML_V8R,TERRAFORM_TERRAFORM_FMT,TERRAFORM_TERRASCAN
+            - name: Create Pull Request with applied fixes
+              id: cpr
+              if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'pull_request' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && !contains(github.event.head_commit.message, 'skip fix')
+              uses: peter-evans/create-pull-request@v7
+              with:
+                commit-message: "[MegaLinter] Apply linters automatic fixes"
+                title: "[MegaLinter] Apply linters automatic fixes"
+                labels: bot
+            - name: Create PR output
+              if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'pull_request' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && !contains(github.event.head_commit.message, 'skip fix')
+              run: |
+                echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+                echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
