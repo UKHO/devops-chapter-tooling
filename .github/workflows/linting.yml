@@ -5,7 +5,15 @@ on:
         branches: [lint-poc]
     pull_request:
         branches: [lint-poc]
-
+env:
+  VALIDATE_ALL_CODEBASE: true
+  APPLY_FIXES: all
+  APPLY_FIXES_EVENT: all
+  APPLY_FIXES_MODE: pull_request
+  APPLY_FIXES_IF_COMMIT: 'true'
+  APPLY_FIXES_IF_PR: 'true'
+  ENABLE: MARKDOWN,YAML,TERRAFORM
+  DISABLE_LINTERS: MARKDOWN_MARKDOWN_TABLE_FORMATTER,YAML_PRETTIER,YAML_V8R,TERRAFORM_TERRAFORM_FMT,TERRAFORM_TERRASCAN
 jobs:
     megalinter:
         name: linting checks
@@ -22,15 +30,6 @@ jobs:
               id: ml
               # uses: UKHO/megalinter-custom-flavor-ukho@v0.0.1-alpha
               uses: oxsecurity/megalinter/flavors/terraform@v9.1.0
-              env:
-                VALIDATE_ALL_CODEBASE: true
-                APPLY_FIXES: all
-                APPLY_FIXES_EVENT: all
-                APPLY_FIXES_MODE: pull_request
-                APPLY_FIXES_IF_COMMIT: 'true'
-                APPLY_FIXES_IF_PR: 'true'
-                ENABLE: MARKDOWN,YAML,TERRAFORM
-                DISABLE_LINTERS: MARKDOWN_MARKDOWN_TABLE_FORMATTER,YAML_PRETTIER,YAML_V8R,TERRAFORM_TERRAFORM_FMT,TERRAFORM_TERRASCAN
             # Upload MegaLinter artifacts
             - name: Archive production artifacts
               if: success() || failure()
