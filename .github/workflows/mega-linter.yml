@@ -76,7 +76,7 @@ jobs:
             (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
           }}" >> "${GITHUB_ENV}"
       - name: Create Pull Request with applied fixes
-        run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'      
+        run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'
       # - name: Create Pull Request with applied fixes
       #   uses: peter-evans/create-pull-request@v7
       #   id: cpr
