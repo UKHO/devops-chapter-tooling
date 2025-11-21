@@ -1,6 +1,6 @@
 name: MegaLinter
 
-on:
+on: # yamllint disable-line rule:truthy - false positive
   push:
       branches: [lint-branch]
   pull_request:
@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
       pull-requests: write
 
     steps:
