@@ -76,17 +76,15 @@ jobs:
             (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
           }}" >> "${GITHUB_ENV}"
       - name: Create Pull Request with applied fixes
-        run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'
-                
+        run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'      
       # - name: Create Pull Request with applied fixes
-        # run: gh pr create -B base_branch -H branch_to_merge --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'
-        # uses: peter-evans/create-pull-request@v7
-        # id: cpr
-        # if: env.APPLY_FIXES_IF_PR == 'true'
-        # with:
-        #   commit-message: "[MegaLinter] Apply linters automatic fixes"
-        #   title: "[MegaLinter] Apply linters automatic fixes"
-        #   labels: bot
+      #   uses: peter-evans/create-pull-request@v7
+      #   id: cpr
+      #   if: env.APPLY_FIXES_IF_PR == 'true'
+      #   with:
+      #     commit-message: "[MegaLinter] Apply linters automatic fixes"
+      #     title: "[MegaLinter] Apply linters automatic fixes"
+      #     labels: bot
 
       # - name: Create PR output
       #   if: env.APPLY_FIXES_IF_PR == 'true'
