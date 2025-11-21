@@ -2,9 +2,9 @@ name: MegaLinter
 
 on: # yamllint disable-line rule:truthy - false positive
   push:
-      branches: [lint-branch]
+    branches: [lint-branch]
   pull_request:
-      branches: [main,master,lint-branch]
+    branches: [main, master, lint-branch]
 
 env:
   APPLY_FIXES: all
