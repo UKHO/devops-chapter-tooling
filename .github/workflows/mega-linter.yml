@@ -75,16 +75,17 @@ jobs:
             env.APPLY_FIXES_MODE == 'commit' &&
             (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
           }}" >> "${GITHUB_ENV}"
-      - name: Create Pull Request with applied fixes
-        run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'
       # - name: Create Pull Request with applied fixes
-      #   uses: peter-evans/create-pull-request@v7
-      #   id: cpr
-      #   if: env.APPLY_FIXES_IF_PR == 'true'
-      #   with:
-      #     commit-message: "[MegaLinter] Apply linters automatic fixes"
-      #     title: "[MegaLinter] Apply linters automatic fixes"
-      #     labels: bot
+      #   run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'
+      - name: Create Pull Request with applied fixes
+        uses: peter-evans/create-pull-request@v7
+        id: cpr
+        if: env.APPLY_FIXES_IF_PR == 'true'
+        with:
+          commit-message: "apply linters automatic fixes"
+          title: "[DEMO] Apply linters automatic fixes"
+          body: THIS IS AN AUTOMATED PR TO APPLY THE FIXES SUGGESTED BY MEGALINTER. PLEASE DO NOT REVIEW OR MERGE IT MANUALLY.
+          labels: auto-lint-fixes, automated-pr, do-not-review, do-not-merge
 
       # - name: Create PR output
       #   if: env.APPLY_FIXES_IF_PR == 'true'
