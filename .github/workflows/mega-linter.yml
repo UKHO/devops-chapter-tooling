@@ -39,6 +39,10 @@ jobs:
         id: ml
         env:
           VALIDATE_ALL_CODEBASE: true
+          FLAVOR_SUGGESTION: false
+          MARKDOWN_MARKDOWNLINT_AUTO_FIX: true
+          TERRAFORM_TERRAFORM_FMT_AUTO_FIX: true
+          YAML_YAMLLINT_AUTO_FIX: true
 
       - name: Archive production artifacts
         if: success() || failure()
@@ -51,6 +55,7 @@ jobs:
             mega-linter.log
 
       - name: Set APPLY_FIXES_IF var
+        if: always()
         run: |
           printf 'APPLY_FIXES_IF=%s\n' "${{
             steps.ml.outputs.has_updated_sources == 1 &&
@@ -65,6 +70,7 @@ jobs:
           }}" >> "${GITHUB_ENV}"
 
       - name: Set APPLY_FIXES_IF_* vars
+        if: always()
         run: |
           printf 'APPLY_FIXES_IF_PR=%s\n' "${{
             env.APPLY_FIXES_IF == 'true' &&
