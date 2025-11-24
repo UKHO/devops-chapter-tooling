@@ -5,13 +5,13 @@ variable "region" {
       "region" ="uksouth"
     },
     "uk2" = {
-      "region" ="ukwest"
+            "region" ="ukwest"
     },
     "us" = {
       "region" ="eastus"
     },
     "us2" = {
-      "region" ="eastus2"
+                            "region" ="eastus2"
     },
   }
 }
@@ -23,5 +23,5 @@ resource "random_password" "password" {
 }
 
 variable "cidr" {
-  default = "127.0.0.0/20"
+        default = "127.0.0.0/20"
 }
