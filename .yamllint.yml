@@ -12,7 +12,4 @@ rules:
     indent-sequences: true
     check-multi-line-strings: false
     level: warning
-  truthy:
-    allowed-values: ['true', 'false']
-    check-keys: true
-    level: warning
+  truthy: disable

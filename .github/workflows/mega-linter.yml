@@ -39,7 +39,7 @@ jobs:
         id: ml
         env:
           VALIDATE_ALL_CODEBASE: true
-          FLAVOR_SUGGESTION: false
+          FLAVOR_SUGGESTIONS: false
           MARKDOWN_MARKDOWNLINT_AUTO_FIX: true
           TERRAFORM_TERRAFORM_FMT_AUTO_FIX: true
           YAML_YAMLLINT_AUTO_FIX: true
@@ -81,8 +81,6 @@ jobs:
             env.APPLY_FIXES_MODE == 'commit' &&
             (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
           }}" >> "${GITHUB_ENV}"
-      # - name: Create Pull Request with applied fixes
-      #   run: gh pr create -B ${{ github.ref_name}} -H ${{ github.head_ref}} --title '[MegaLinter] Apply linters automatic fixes' --body 'PLEASE IGNORE THIS PR. IT IS JUST A TEST'
       - name: Create Pull Request with applied fixes
         uses: peter-evans/create-pull-request@v7
         id: cpr
@@ -93,8 +91,8 @@ jobs:
           body: THIS IS AN AUTOMATED PR TO APPLY THE FIXES SUGGESTED BY MEGALINTER. PLEASE DO NOT REVIEW OR MERGE IT MANUALLY.
           labels: auto-lint-fixes, automated-pr, do-not-review, do-not-merge
 
-      # - name: Create PR output
-      #   if: env.APPLY_FIXES_IF_PR == 'true'
-      #   run: |
-      #     echo "PR Number - ${{ steps.cpr.outputs.pull-request-number }}"
-      #     echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"
+      - name: Create PR output
+        if: env.APPLY_FIXES_IF_PR == 'true'
+        run: |
+          echo "PR Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"
