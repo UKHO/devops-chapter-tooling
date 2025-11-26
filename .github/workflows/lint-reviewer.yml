@@ -1,0 +1,96 @@
+name: Lint Review
+
+on:
+  pull_request:
+    paths:
+      - '**/*.yaml'
+      - '**/*.yml'
+      - '**/*.tf'
+      - '**/*.md'
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+          npm install -g markdownlint-cli prettier
+          curl -sL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
+
+      # -------- YAML Auto-fix and Suggestion --------
+      - name: Prettier fix YAML
+        run: npx prettier --write "**/*.yml"
+
+      - name: Suggest YAML fixes
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: prettier (yaml)
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # -------- Terraform Auto-fix and Suggestion --------
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt fix
+        if: always()
+        run: terraform fmt -recursive
+
+      - name: Suggest Terraform fixes
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: terraform fmt
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # -------- Markdown Auto-fix and Suggestion --------
+      - name: Markdownlint fix
+        if: always()
+        run: npx markdownlint --fix "**/*.md"
+
+      - name: Suggest Markdown fixes
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: markdownlint
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # --------- (Optional) Lint and Comment Only ---------
+      # ---------------- YAML ----------------
+      - name: Run yamllint with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          yamllint . --format parsable \
+            | reviewdog -f=yamllint -name=yamllint -reporter=github-pr-review -filter-mode=added -fail-on-error=false
+
+      # ---------------- Terraform ----------------
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run terraform fmt with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          terraform fmt -check -diff -recursive \
+            | reviewdog -f=diff -name=terraform-fmt -reporter=github-pr-review -filter-mode=added -fail-on-error=false
+
+      # ---------------- Markdown ----------------
+      - name: Run markdownlint with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          markdownlint '**/*.md' \
+            | reviewdog -f=markdownlint -name=markdownlint -reporter=github-pr-review -filter-mode=added -fail-on-error=false
