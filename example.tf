@@ -2,26 +2,26 @@ variable "region" {
   type = map(any)
   default = {
     "uk1" = {
-      "region" ="uksouth"
+      "region" = "uksouth"
     },
     "uk2" = {
-            "region" ="ukwest"
+      "region" = "ukwest"
     },
     "us" = {
-      "region" ="eastus"
+      "region" = "eastus"
     },
     "us2" = {
-                            "region" ="eastus2"
+      "region" = "eastus2"
     },
   }
 }
 
 resource "random_password" "password" {
-  length            = 16
-  special           = true
-  override_special  = "!@#$%&*()-_=+[]{}<>:?"
+  length           = 16
+  special          = true
+  override_special = "!@#$%&*()-_=+[]{}<>:?"
 }
 
 variable "cidr" {
-        default = "127.0.0.0/20"
+  default = "127.0.0.0/20"
 }
