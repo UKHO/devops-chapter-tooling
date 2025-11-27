@@ -1,0 +1,27 @@
+subject: Mathematics
+domain:
+  - arithmetic
+  - algebra
+  - calculus
+  - geometry
+publications:
+  - title: Basic Arithmetic
+    url: https://example.com/basic-arithmetic
+  - title: Introduction to Algebra #trailing space after next line
+    url: https:https://example.com/introduction-to-algebra          
+  - title: Calculus for Beginners
+    url: https://example.com/calculus-for-beginners
+  - title: Understanding Geometry
+    url: https://example.com/understanding-geometry
+
+
+
+examinations:
+  - name: Arithmetic Test
+    date: 2023-05-01
+  - name: Algebra Test
+    date: 2023-06-01
+  - name: Calculus Test
+    date: 2023-07-01
+  - name: Geometry Test
+    date: 2023-08-01 # No newline at end of file
