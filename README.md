@@ -4,7 +4,7 @@ Repository to contain useful resources for the chapter.
 
 ## Sandbox
 
-Inside the 'sandbox' directory, you'll find a terraform subdirectory that contains prerequisite resources needed for the sandbox. Currently, there is terraform for:      
+Inside the 'sandbox' directory, you'll find a terraform subdirectory that contains prerequisite resources needed for the sandbox. Currently, there is terraform for:
 
 - TFState Storage Account
 
