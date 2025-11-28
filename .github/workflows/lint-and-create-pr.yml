@@ -1,7 +1,7 @@
 name: MegaLinter and Create PR
 on:
   pull_request:
-    branches: [main, master, lint-n-create-pr]
+    branches: [main, master, mock-main]
 env:
   APPLY_FIXES: all
   APPLY_FIXES_EVENT: all
