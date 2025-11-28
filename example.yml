@@ -8,11 +8,13 @@ publications:
   - title: Basic Arithmetic
     url: https://example.com/basic-arithmetic
   - title: Introduction to Algebra #trailing space after next line
-    url: https:https://example.com/introduction-to-algebra          
+    url: https:https://example.com/introduction-to-algebra           
   - title: Calculus for Beginners
     url: https://example.com/calculus-for-beginners
   - title: Understanding Geometry
     url: https://example.com/understanding-geometry
+
+
 
 examinations:
   - name: Arithmetic Test
