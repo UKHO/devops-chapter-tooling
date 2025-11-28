@@ -1,0 +1,85 @@
+name: MegaLinter and Create PR
+on:
+  pull_request:
+    branches: [main, master, lint-n-create-pr]
+env:
+  APPLY_FIXES: all
+  APPLY_FIXES_EVENT: all
+  APPLY_FIXES_MODE: pull_request
+  APPLY_FIXES_IF_PR: "true"
+  APPLY_FIXES_IF_COMMIT: "false"
+  ENABLE: MARKDOWN,YAML,TERRAFORM
+  DISABLE_LINTERS: MARKDOWN_MARKDOWN_TABLE_FORMATTER,YAML_PRETTIER,YAML_V8R,TERRAFORM_TFLINT,TERRAFORM_TERRASCAN
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+permissions: {}
+jobs:
+  megalinter:
+    name: MegaLinter
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+      - name: MegaLinter
+        uses: oxsecurity/megalinter/flavors/terraform@v9.1.0
+        id: ml
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          FLAVOR_SUGGESTIONS: false
+          MARKDOWN_MARKDOWNLINT_AUTO_FIX: true
+          TERRAFORM_TERRAFORM_FMT_AUTO_FIX: true
+          YAML_YAMLLINT_AUTO_FIX: true
+      - name: Archive production artifacts
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MegaLinter reports
+          include-hidden-files: "true"
+          path: |
+            megalinter-reports
+            mega-linter.log
+      - name: Set APPLY_FIXES_IF var
+        if: always()
+        run: |
+          printf 'APPLY_FIXES_IF=%s\n' "${{
+            steps.ml.outputs.has_updated_sources == 1 &&
+            (
+              env.APPLY_FIXES_EVENT == 'all' ||
+              env.APPLY_FIXES_EVENT == github.event_name
+            ) &&
+            (
+              github.event_name == 'push' ||
+              github.event.pull_request.head.repo.full_name == github.repository
+            )
+          }}" >> "${GITHUB_ENV}"
+      - name: Set APPLY_FIXES_IF_* vars
+        if: always()
+        run: |
+          printf 'APPLY_FIXES_IF_PR=%s\n' "${{
+            env.APPLY_FIXES_IF == 'true' &&
+            env.APPLY_FIXES_MODE == 'pull_request'
+          }}" >> "${GITHUB_ENV}"
+          printf 'APPLY_FIXES_IF_COMMIT=%s\n' "${{
+            env.APPLY_FIXES_IF == 'true' &&
+            env.APPLY_FIXES_MODE == 'commit' &&
+            (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
+          }}" >> "${GITHUB_ENV}"
+      - name: Create Pull Request with applied fixes
+        uses: peter-evans/create-pull-request@v7
+        id: cpr
+        if: env.APPLY_FIXES_IF_PR == 'true'
+        with:
+          commit-message: "apply linters automatic fixes"
+          title: "[DEMO] Apply linters automatic fixes"
+          body: THIS IS AN AUTOMATED PR TO APPLY THE FIXES SUGGESTED BY MEGALINTER. PLEASE DO NOT REVIEW OR MERGE IT MANUALLY.
+          labels: auto-lint-fixes, automated-pr, do-not-review, do-not-merge
+      - name: Create PR output
+        if: env.APPLY_FIXES_IF_PR == 'true'
+        run: |
+          echo "PR Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"

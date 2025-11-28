@@ -1,6 +1,7 @@
 name: MegaLinter with Reviewdog Suggester
 on:
   pull_request:
+    branches: [main, master, lint-and-review]
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
